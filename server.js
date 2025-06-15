@@ -21,7 +21,7 @@ import caterogyController from "./app/controllers/category.js";
 import subscriptionController from "./app/controllers/subscription.js";
 import taskController from "./app/controllers/tasks.js";
 import walletController from "./app/controllers/wallet.js";
-import leaderboardController from "./app/controllers/leaderboard .js";
+import leaderboardController from "./app/controllers/leaderboard.js";
 import transactionController from "./app/controllers/transaction.js";
 
 import authenticateUser from "./app/middlewares/authenticateUser.js";
