@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"))
 app.use(cors())
 configureDB()
-const port = process.env.PORT || 3636
+const port = process.env.PORT
 
 import userController from "./app/controllers/user.js";
 import bidController from "./app/controllers/bid.js";
