@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"))
 app.use(cors())
 configureDB()
-const port = process.env.PORT
+const port = process.env.PORT || 3189
 
 import userController from "./app/controllers/user.js";
 import bidController from "./app/controllers/bid.js";
@@ -32,6 +32,7 @@ import {userRegisterSchema,userLoginSchema} from "./app/validators/user-validati
 import categoryValidationSchema from "./app/validators/category-validation-schema.js";
 import taskValidationSchema from "./app/validators/task-validation-schema.js";
 
+app.get("/users/count", userController.count);
 app.post("/users/register", checkSchema(userRegisterSchema), userController.register);
 app.post("/users/login", checkSchema(userLoginSchema), userController.login);
 app.get("/users/myProfile", authenticateUser, userController.account);

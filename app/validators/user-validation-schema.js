@@ -48,8 +48,11 @@ export const userRegisterSchema = {
     trim: true
   },
   role: {
-    exists: { errorMessage: "role field is required" },
-    notEmpty: { errorMessage: "role cannot be empty" }
+  optional: true, 
+  isIn: {
+    options: [['poster', 'hunter']],
+    errorMessage: 'Role must be either poster or hunter'
+  }
   },
   phone: {
     optional: true,

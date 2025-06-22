@@ -31,10 +31,14 @@ cron.schedule('0 9 * * *', async () => {
     for (const sub of expiringSubs) {
       if (sub.userId?.role === 'poster') {
         await sendEmail(
+          
           sub.userId.email,
           '📅 Your TaskBounty Subscription is Expiring Soon',
           `Hi ${sub.userId.name},\n\nYour ${sub.planType} subscription will expire on ${sub.endDate.toDateString()}.\nPlease renew to continue posting tasks without interruption.\n\n- TaskBounty Team`
+          
         );
+        console.log('🔍 Expiring subscriptions found:', expiringSubs.length);
+
       }
     }
 
@@ -50,7 +54,7 @@ cron.schedule('0 9 * * *', async () => {
       for (const hunter of hunters) {
         await sendEmail(
           hunter.email,
-          '⏳ Many Tasks Are Closing Bidding Soon – Grab Your Opportunity!',
+          '⏳ Many Tasks Are Closing Bidding Soon - Grab Your Opportunity!',
           `Hi ${hunter.name},\n\nHere are some tasks whose bidding period is ending soon:\n\n${taskTitles}\n\nDon't miss your chance to place your bids!\n\n- TaskBounty Team`
         );
       }

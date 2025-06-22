@@ -11,38 +11,39 @@ import { BADGES } from "../../badges.js";
 const userController={}
 
 userController.register = async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    const body = _.pick(req.body, ['name', 'email', 'password', 'role', 'phone']);
-    try {
-      const salt = await bcryptjs.genSalt();
-      const hash = await bcryptjs.hash(body.password, salt);
-      const totalUsers = await User.countDocuments();
-  
-      const user = new User(body);
-      user.password = hash;
-      if (totalUsers === 0) {
-        user.role = 'admin';
-      } else {
-        if (user.role === 'poster' || user.role === 'hunter') {
-          user.role = body.role;
-        } else {
-          return res.status(400).json({ error: "Role must be either poster or hunter" });
-        }
+  const body = _.pick(req.body, ['name', 'email', 'password', 'role', 'phone']);
+  try {
+    const totalUsers = await User.countDocuments();
+    if (totalUsers !== 0) {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
       }
-      await user.save();
-      res.status(201).json(user);
-      await sendEmail(
+    }
+    const salt = await bcryptjs.genSalt();
+    const hash = await bcryptjs.hash(body.password, salt);
+    const user = new User(body);
+    user.password = hash;
+    if (totalUsers === 0) {
+      user.role = 'admin';
+    } else {
+      if (user.role === 'poster' || user.role === 'hunter') {
+        user.role = body.role;
+      } else {
+        return res.status(400).json({ error: "Role must be either poster or hunter" });
+      }
+    }
+    await user.save();
+    res.status(201).json(user);
+    await sendEmail(
       user.email,
       'Welcome to TaskBounty!',
       `Hi ${user.name},\n\nThank you for registering on TaskBounty.\nWe're excited to have you onboard!\n\n- TaskBounty Team`
     );
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Something went wrong!!!" });
-    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({error: "Something went wrong!!!" });
+  }
 };
 
 userController.login = async (req, res) => {
@@ -131,6 +132,15 @@ userController.list=async(req,res)=>{
     }
 };
 
+userController.count=async(req,res)=>{
+     try {
+    const count = await User.countDocuments();
+    res.json({ count });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Could not fetch user count" });
+  }
+};
 userController.activateUser = async(req,res)=>{
     const id=req.params.id
     const body=req.body;
